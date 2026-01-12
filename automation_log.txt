@@ -1,0 +1,161 @@
+2025-10-17 16:14:01,145 - INFO - ====== WebDriver manager ======
+2025-10-17 16:14:03,454 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-17 16:14:03,897 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-17 16:14:04,479 - INFO - Driver [C:\Users\M Yunas Khan\.wdm\drivers\chromedriver\win64\141.0.7390.78\chromedriver-win32/chromedriver.exe] found in cache
+2025-10-17 16:14:08,449 - INFO - \u2705 Logged in successfully
+2025-10-17 16:14:19,826 - INFO - \u2705 Navigated to Add Product Page
+2025-10-17 16:14:36,658 - WARNING - \u26a0\ufe0f Attempt 1: Could not click ('xpath', "//div[@id='categorySelect']//div[contains(@class,'select__control')]") -> Message: 
+Stacktrace:
+	GetHandleVerifier [0x0x3efe83+66515]
+	GetHandleVerifier [0x0x3efec4+66580]
+	(No symbol) [0x0x1ddc48]
+	(No symbol) [0x0x228704]
+	(No symbol) [0x0x228aab]
+	(No symbol) [0x0x26f482]
+	(No symbol) [0x0x24b214]
+	(No symbol) [0x0x26cba7]
+	(No symbol) [0x0x24afc6]
+	(No symbol) [0x0x21c2ca]
+	(No symbol) [0x0x21d154]
+	GetHandleVerifier [0x0x6473b3+2521347]
+	GetHandleVerifier [0x0x642333+2500739]
+	GetHandleVerifier [0x0x417cd4+229924]
+	GetHandleVerifier [0x0x408238+165768]
+	GetHandleVerifier [0x0x40eced+193085]
+	GetHandleVerifier [0x0x3f8198+100072]
+	GetHandleVerifier [0x0x3f8330+100480]
+	GetHandleVerifier [0x0x3e25ea+11066]
+	BaseThreadInitThunk [0x0x77045d49+25]
+	RtlInitializeExceptionChain [0x0x7734d6db+107]
+	RtlGetAppContainerNamedObjectPath [0x0x7734d661+561]
+
+2025-10-17 16:14:52,923 - WARNING - \u26a0\ufe0f Attempt 2: Could not click ('xpath', "//div[@id='categorySelect']//div[contains(@class,'select__control')]") -> Message: 
+Stacktrace:
+	GetHandleVerifier [0x0x3efe83+66515]
+	GetHandleVerifier [0x0x3efec4+66580]
+	(No symbol) [0x0x1ddc48]
+	(No symbol) [0x0x228704]
+	(No symbol) [0x0x228aab]
+	(No symbol) [0x0x26f482]
+	(No symbol) [0x0x24b214]
+	(No symbol) [0x0x26cba7]
+	(No symbol) [0x0x24afc6]
+	(No symbol) [0x0x21c2ca]
+	(No symbol) [0x0x21d154]
+	GetHandleVerifier [0x0x6473b3+2521347]
+	GetHandleVerifier [0x0x642333+2500739]
+	GetHandleVerifier [0x0x417cd4+229924]
+	GetHandleVerifier [0x0x408238+165768]
+	GetHandleVerifier [0x0x40eced+193085]
+	GetHandleVerifier [0x0x3f8198+100072]
+	GetHandleVerifier [0x0x3f8330+100480]
+	GetHandleVerifier [0x0x3e25ea+11066]
+	BaseThreadInitThunk [0x0x77045d49+25]
+	RtlInitializeExceptionChain [0x0x7734d6db+107]
+	RtlGetAppContainerNamedObjectPath [0x0x7734d661+561]
+
+2025-10-17 16:15:09,208 - WARNING - \u26a0\ufe0f Attempt 1: Could not click ('xpath', "//div[contains(@id,'react-select') and @role='option'][1]") -> Message: 
+Stacktrace:
+	GetHandleVerifier [0x0x3efe83+66515]
+	GetHandleVerifier [0x0x3efec4+66580]
+	(No symbol) [0x0x1ddc48]
+	(No symbol) [0x0x228704]
+	(No symbol) [0x0x228aab]
+	(No symbol) [0x0x26f482]
+	(No symbol) [0x0x24b214]
+	(No symbol) [0x0x26cba7]
+	(No symbol) [0x0x24afc6]
+	(No symbol) [0x0x21c2ca]
+	(No symbol) [0x0x21d154]
+	GetHandleVerifier [0x0x6473b3+2521347]
+	GetHandleVerifier [0x0x642333+2500739]
+	GetHandleVerifier [0x0x417cd4+229924]
+	GetHandleVerifier [0x0x408238+165768]
+	GetHandleVerifier [0x0x40eced+193085]
+	GetHandleVerifier [0x0x3f8198+100072]
+	GetHandleVerifier [0x0x3f8330+100480]
+	GetHandleVerifier [0x0x3e25ea+11066]
+	BaseThreadInitThunk [0x0x77045d49+25]
+	RtlInitializeExceptionChain [0x0x7734d6db+107]
+	RtlGetAppContainerNamedObjectPath [0x0x7734d661+561]
+
+2025-10-17 16:15:25,497 - WARNING - \u26a0\ufe0f Attempt 2: Could not click ('xpath', "//div[contains(@id,'react-select') and @role='option'][1]") -> Message: 
+Stacktrace:
+	GetHandleVerifier [0x0x3efe83+66515]
+	GetHandleVerifier [0x0x3efec4+66580]
+	(No symbol) [0x0x1ddc48]
+	(No symbol) [0x0x228704]
+	(No symbol) [0x0x228aab]
+	(No symbol) [0x0x26f482]
+	(No symbol) [0x0x24b214]
+	(No symbol) [0x0x26cba7]
+	(No symbol) [0x0x24afc6]
+	(No symbol) [0x0x21c2ca]
+	(No symbol) [0x0x21d154]
+	GetHandleVerifier [0x0x6473b3+2521347]
+	GetHandleVerifier [0x0x642333+2500739]
+	GetHandleVerifier [0x0x417cd4+229924]
+	GetHandleVerifier [0x0x408238+165768]
+	GetHandleVerifier [0x0x40eced+193085]
+	GetHandleVerifier [0x0x3f8198+100072]
+	GetHandleVerifier [0x0x3f8330+100480]
+	GetHandleVerifier [0x0x3e25ea+11066]
+	BaseThreadInitThunk [0x0x77045d49+25]
+	RtlInitializeExceptionChain [0x0x7734d6db+107]
+	RtlGetAppContainerNamedObjectPath [0x0x7734d661+561]
+
+2025-10-17 16:15:35,743 - INFO - ====== WebDriver manager ======
+2025-10-17 16:15:37,445 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-17 16:15:37,858 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-17 16:15:38,356 - INFO - Driver [C:\Users\M Yunas Khan\.wdm\drivers\chromedriver\win64\141.0.7390.78\chromedriver-win32/chromedriver.exe] found in cache
+2025-10-17 16:15:42,362 - INFO - \u2705 Logged in successfully
+2025-10-17 16:15:46,785 - INFO - \u2705 Navigated to Add Product Page
+2025-10-17 16:16:03,032 - WARNING - \u26a0\ufe0f Attempt 1: Could not click ('xpath', "//div[@id='categorySelect']//div[contains(@class,'select__control')]") -> Message: 
+Stacktrace:
+	GetHandleVerifier [0x0x3efe83+66515]
+	GetHandleVerifier [0x0x3efec4+66580]
+	(No symbol) [0x0x1ddc48]
+	(No symbol) [0x0x228704]
+	(No symbol) [0x0x228aab]
+	(No symbol) [0x0x26f482]
+	(No symbol) [0x0x24b214]
+	(No symbol) [0x0x26cba7]
+	(No symbol) [0x0x24afc6]
+	(No symbol) [0x0x21c2ca]
+	(No symbol) [0x0x21d154]
+	GetHandleVerifier [0x0x6473b3+2521347]
+	GetHandleVerifier [0x0x642333+2500739]
+	GetHandleVerifier [0x0x417cd4+229924]
+	GetHandleVerifier [0x0x408238+165768]
+	GetHandleVerifier [0x0x40eced+193085]
+	GetHandleVerifier [0x0x3f8198+100072]
+	GetHandleVerifier [0x0x3f8330+100480]
+	GetHandleVerifier [0x0x3e25ea+11066]
+	BaseThreadInitThunk [0x0x77045d49+25]
+	RtlInitializeExceptionChain [0x0x7734d6db+107]
+	RtlGetAppContainerNamedObjectPath [0x0x7734d661+561]
+
+2025-10-17 16:16:25,033 - INFO - ====== WebDriver manager ======
+2025-10-17 16:16:26,806 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-17 16:16:27,233 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-17 16:16:27,652 - INFO - Driver [C:\Users\M Yunas Khan\.wdm\drivers\chromedriver\win64\141.0.7390.78\chromedriver-win32/chromedriver.exe] found in cache
+2025-10-17 16:16:31,916 - INFO - \u2705 Logged in successfully
+2025-10-17 16:16:37,100 - INFO - \u2705 Navigated to Add Product Page
+2025-10-17 16:22:06,667 - INFO - ====== WebDriver manager ======
+2025-10-17 16:22:08,394 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-17 16:22:08,839 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-17 16:22:09,255 - INFO - Driver [C:\Users\M Yunas Khan\.wdm\drivers\chromedriver\win64\141.0.7390.78\chromedriver-win32/chromedriver.exe] found in cache
+2025-11-13 12:34:44,857 - INFO - ====== WebDriver manager ======
+2025-11-13 12:34:46,183 - INFO - Get LATEST chromedriver version for google-chrome
+2025-11-13 12:34:46,581 - INFO - Get LATEST chromedriver version for google-chrome
+2025-11-13 12:34:46,948 - INFO - Get LATEST chromedriver version for google-chrome
+2025-11-13 12:34:47,791 - INFO - WebDriver version 142.0.7444.162 selected
+2025-11-13 12:34:47,796 - INFO - Modern chrome version https://storage.googleapis.com/chrome-for-testing-public/142.0.7444.162/win32/chromedriver-win32.zip
+2025-11-13 12:34:47,796 - INFO - About to download new driver from https://storage.googleapis.com/chrome-for-testing-public/142.0.7444.162/win32/chromedriver-win32.zip
+2025-11-13 12:34:48,267 - INFO - Driver downloading response is 200
+2025-11-13 12:34:50,638 - INFO - Get LATEST chromedriver version for google-chrome
+2025-11-13 12:34:51,463 - INFO - Driver has been saved in cache [C:\Users\M Yunas Khan\.wdm\drivers\chromedriver\win64\142.0.7444.162]
+2025-11-14 12:23:07,511 - INFO - ====== WebDriver manager ======
+2025-11-14 12:23:09,443 - INFO - Get LATEST chromedriver version for google-chrome
+2025-11-14 12:23:09,949 - INFO - Get LATEST chromedriver version for google-chrome
+2025-11-14 12:23:10,527 - INFO - Driver [C:\Users\M Yunas Khan\.wdm\drivers\chromedriver\win64\142.0.7444.162\chromedriver-win32/chromedriver.exe] found in cache
