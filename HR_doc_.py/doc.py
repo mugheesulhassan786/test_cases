@@ -133,7 +133,7 @@ driver.find_element(By.XPATH, "/html").send_keys(Keys.PAGE_DOWN)
 time.sleep(2)
 
 upload_input = wait.until(EC.presence_of_element_located((By.XPATH, '//input[@type="file"]')))
-file_path = r"C:\Users\M Yunas Khan\Downloads\HPLaptop.png"
+file_path = "./img/Image_1.png"
 upload_input.send_keys(file_path)
 time.sleep(3)
 

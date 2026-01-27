@@ -96,7 +96,7 @@ upload_input = wait.until(EC.presence_of_element_located((
 )))
 
 # ✅ Step 2: Apni file ka path bhejo
-file_path = r"C:\Users\M Yunas Khan\Downloads\HPLaptop.png"
+file_path = "./img/Image_1.png"
 upload_input.send_keys(file_path)
 
 time.sleep(4)

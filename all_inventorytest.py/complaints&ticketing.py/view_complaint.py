@@ -305,7 +305,7 @@ for i in range(100):
     upload_input = wait.until(EC.presence_of_element_located((By.XPATH, '//input[@type="file"]')))
     driver.execute_script("arguments[0].removeAttribute('hidden');", upload_input)
     driver.execute_script("arguments[0].style.display = 'block';", upload_input)
-    file_path = r"C:\Users\M Yunas Khan\Downloads\Complaints.png"
+    file_path = "./img/Image_1.png"
     upload_input.send_keys(file_path)
     time.sleep(2)
 

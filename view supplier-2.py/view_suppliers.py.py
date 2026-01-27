@@ -272,7 +272,7 @@ upload_input = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@ty
 driver.execute_script("arguments[0].style.display = 'block';", upload_input)
 
 # Apni image ka full path send karo (extension zaroori hai)
-upload_input.send_keys(r"C:\Users\M Yunas Khan\Downloads\istockphoto-180809150-612x612.jpg")
+upload_input.send_keys("./img/Image_1.png")
 
 time.sleep(2)
 html.send_keys(Keys.PAGE_DOWN)

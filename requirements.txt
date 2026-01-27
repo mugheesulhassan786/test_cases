@@ -1,0 +1,10 @@
+# Test Cases Repository - Python Dependencies
+# 
+# Install dependencies with:
+#   pip install -r requirements.txt
+
+# Web automation framework
+selenium>=4.0.0,<5.0.0
+
+# ChromeDriver management
+webdriver-manager>=4.0.0,<5.0.0

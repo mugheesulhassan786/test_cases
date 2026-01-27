@@ -126,7 +126,7 @@ driver.execute_script("arguments[0].removeAttribute('hidden');", upload_input)
 driver.execute_script("arguments[0].style.display = 'block';", upload_input)
 
 # ✅ Apni file ka full path do (rename karke simple naam rakhna)
-file_path = r"C:\Users\M Yunas Khan\Downloads\HPLaptop.png"
+file_path = "./img/Image_1.png"
 upload_input.send_keys(file_path)
 time.sleep(3)
 html = driver.find_element(By.XPATH, "/html")
@@ -244,7 +244,7 @@ time.sleep(7)
 #     driver.execute_script("arguments[0].removeAttribute('hidden');", upload_input)
 #     driver.execute_script("arguments[0].style.display = 'block';", upload_input)
 
-#     file_path = r"C:\Users\M Yunas Khan\Downloads\HPLaptop.png"
+#     file_path = "./img/Image_1.png"
 #     upload_input.send_keys(file_path)
 #     time.sleep(4)
 

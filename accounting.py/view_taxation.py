@@ -264,7 +264,7 @@ def main():
 
     # File upload
     file_input_xpath = '//input[@type="file"]'
-    file_path = r"C:\Users\M Yunas Khan\Downloads\HPLaptop.png"
+    file_path = "./img/Image_1.png"
     upload_file(driver, wait, file_input_xpath, file_path)
     time.sleep(1.0)
 
