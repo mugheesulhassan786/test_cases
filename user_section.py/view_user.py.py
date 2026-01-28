@@ -103,7 +103,7 @@
 #                                       # --------------------------
 #                                             # 3) Login
 #                                       # --------------------------
-# driver.get("https://gamerpc-test.vercel.app/admin/login")
+# driver.get("https://testing.d1z4wu6myne6l0.amplifyapp.com/admin/login")
 # driver.maximize_window()
 # time.sleep(2)
 
@@ -459,7 +459,7 @@ wait = WebDriverWait(driver, 20)
 # --------------------------
 # 4) Login
 # --------------------------
-driver.get("https://gamerpc-test.vercel.app/admin/login")
+driver.get("https://testing.d1z4wu6myne6l0.amplifyapp.com/admin/login")
 driver.maximize_window()
 time.sleep(2)
 

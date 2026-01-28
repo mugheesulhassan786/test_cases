@@ -27,7 +27,7 @@
 # # --------------------------
 # # 3) Login
 # # --------------------------
-# driver.get("https://bavit-test.vercel.app/admin/login")
+# driver.get("https://testing.d1z4wu6myne6l0.amplifyapp.com/admin/login")
 # driver.maximize_window()
 # time.sleep(2)
 
@@ -188,7 +188,7 @@ def main():
     wait = wait_for_ready(driver, 20)
 
     # open site and login
-    driver.get("https://bavit-test.vercel.app/admin/login")
+    driver.get("https://testing.d1z4wu6myne6l0.amplifyapp.com/admin/login")
     driver.maximize_window()
     time.sleep(2)
 

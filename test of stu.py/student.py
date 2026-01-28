@@ -24,7 +24,7 @@ public class BavitTest {
             // --------------------------
             // 3) Login
             // --------------------------
-            driver.get("https://bavit-test.vercel.app/admin/login");
+            driver.get("https://testing.d1z4wu6myne6l0.amplifyapp.com/admin/login");
             driver.manage().window().maximize();
             Thread.sleep(2000);
 

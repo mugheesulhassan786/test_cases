@@ -113,7 +113,7 @@ driver = webdriver.Chrome(service=service, options=options)
 # Automation Loop
 # ===============================
 for email in zip(emails):
-    driver.get("https://bav-client-hera.vercel.app/")
+    driver.get("https://testing.d1z4wu6myne6l0.amplifyapp.com/")
     driver.maximize_window()
     time.sleep(3)
 

@@ -56,7 +56,7 @@
 #     # Open new tab
 #     driver.execute_script("window.open('');")
 #     driver.switch_to.window(driver.window_handles[-1])
-#     driver.get("https://bav-client-hera.vercel.app/")
+#     driver.get("https://testing.d1z4wu6myne6l0.amplifyapp.com/")
 #     driver.maximize_window()
 
 #     # Wait for full page load
@@ -230,7 +230,7 @@
 #     wait = WebDriverWait(driver, 30)
 
 #     try:
-#         driver.get("https://bav-client-hera.vercel.app/")
+#         driver.get("https://testing.d1z4wu6myne6l0.amplifyapp.com/")
 #         wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
 #         time.sleep(2)
 
@@ -300,7 +300,7 @@ wait = WebDriverWait(driver, 25)
 # =============================
 # Login
 # =============================
-driver.get("https://bavit-test.vercel.app/admin/login")
+driver.get("https://testing.d1z4wu6myne6l0.amplifyapp.com/admin/login")
 
 email_field = wait.until(EC.visibility_of_element_located((By.NAME, "email")))
 email_field.send_keys("admin@gmail.com")

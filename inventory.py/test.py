@@ -11,7 +11,7 @@ import time
 # Login Function
 # --------------------------
 def login(driver, wait):
-    driver.get("https://bavit-test.vercel.app/admin/login")   # <-- yahan apna actual URL dalna
+    driver.get("https://testing.d1z4wu6myne6l0.amplifyapp.com/admin/login")   # <-- yahan apna actual URL dalna
     driver.maximize_window()
 
     # Example login steps (update locators as per your login page)

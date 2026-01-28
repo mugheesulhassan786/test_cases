@@ -25,7 +25,7 @@ wait = WebDriverWait(driver, 20)
                                       # --------------------------
                                             # 3) Login 
                                       # --------------------------
-driver.get("https://gamerpc-test.vercel.app/admin/login")
+driver.get("https://testing.d1z4wu6myne6l0.amplifyapp.com/admin/login")
 driver.maximize_window()
 time.sleep(2)
 
@@ -34,7 +34,7 @@ for _ in range(2):
     time.sleep(0.5)
 
 email_field_login = wait.until(EC.presence_of_element_located((By.XPATH, '//input[@name="email"]')))
-email_field_login.send_keys("admintest@gmail.com")
+email_field_login.send_keys("admin@gmail.com")
 
 password_field_login = wait.until(EC.presence_of_element_located((By.XPATH, '//input[@type="password"]')))
 password_field_login.send_keys("Bmr@1234")
