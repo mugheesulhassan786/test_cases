@@ -110,10 +110,13 @@ time.sleep(7)
 Select_Inventory = wait.until(
     EC.presence_of_element_located((By.XPATH, '/html/body/div[4]/div/div[1]/div/div/div[2]/div[3]/div[1]/div/div[2]/div/div/div/div[1]/div[2]'))
 )
+driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", Select_Inventory)
+time.sleep(0.5)
 Select_Inventory.click()
+time.sleep(1)
 
 first_option = wait.until(
-    EC.element_to_be_clickable((By.XPATH, '//div[contains(@id,"react-select") and @role="option"][1]'))
+    EC.element_to_be_clickable((By.XPATH, '(//div[contains(@id,"react-select") and @role="option"])[1]'))
 )
 first_option.click()
 time.sleep(2)
