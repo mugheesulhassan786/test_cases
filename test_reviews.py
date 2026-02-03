@@ -19,34 +19,35 @@ class TestReviews(BaseTest):
 
     def navigate_to_url(self, url_path):
         """Navigate directly to a URL"""
-        base = getattr(self, 'BASE_URL', "https://testing.d1z4wu6myne6l0.amplifyapp.com")
+        base = getattr(self, 'base_url', None) or getattr(self, 'BASE_URL', "https://testing.d1z4wu6myne6l0.amplifyapp.com")
         full_url = f"{base}{url_path}"
         logger.info(f"Navigating to: {full_url}")
         self.driver.get(full_url)
-        time.sleep(3)
+        self.wait_for_page_load()
+        self.wait_for_no_loading(timeout=10)
+
+    def verify_page_loaded(self, breadcrumb_text, timeout=10):
+        """Verify page loaded by checking breadcrumb or page content"""
+        try:
+            WebDriverWait(self.driver, timeout).until(
+                EC.presence_of_element_located(
+                    (By.XPATH, f"//div[contains(@class,'page-title')]//li[contains(text(),'{breadcrumb_text}')] | //ol[contains(@class,'breadcrumb')]//li[contains(text(),'{breadcrumb_text}')]")
+                )
+            )
+            return True
+        except TimeoutException:
+            return breadcrumb_text.lower() in self.driver.page_source.lower()
 
     def test_01_view_reviews_page_loads(self):
         """Verify View Reviews page loads correctly"""
         logger.info("=== Testing View Reviews Page Load ===")
         self.navigate_to_url("/reviews/view-review")
-        
-        try:
-            heading = self.wait_for_element(
-                (By.XPATH, "//h4[contains(text(),'Review')] | //h5[contains(text(),'Review')]"),
-                timeout=10
-            )
-            assert heading.is_displayed()
-            logger.info("[OK] View Reviews page loaded with heading")
-            
-            # Check for reviews table or cards
-            content = self.driver.find_elements(By.XPATH, "//table | //div[contains(@class,'card')] | //div[contains(@class,'review')]")
-            if content:
-                logger.info("[OK] Reviews content found")
-                
-        except TimeoutException:
-            logger.warning("Reviews page heading not found")
-        
-        time.sleep(2)
+
+        if self.verify_page_loaded("Review"):
+            logger.info("[OK] View Reviews page loaded")
+        else:
+            assert "review" in self.driver.page_source.lower(), "Reviews page did not load"
+            logger.info("[OK] View Reviews page loaded (via content)")
 
 
 if __name__ == "__main__":

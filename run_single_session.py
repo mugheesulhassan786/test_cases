@@ -191,12 +191,14 @@ class SingleSessionTestRunner(BaseTest):
     
     def _cleanup_between_tests(self):
         """Clean up any open modals or overlays between tests"""
-        try:
-            # First, specifically try to close Add Bundle Listing modal
-            self._close_bundle_listing_modal()
-            
-            # Try to close any open modals by clicking close buttons (including X icon)
-            close_button_selectors = [
+        max_attempts = 3
+        for attempt in range(max_attempts):
+            try:
+                # First, specifically try to close Add Bundle Listing modal
+                self._close_bundle_listing_modal()
+
+                # Try to close any open modals by clicking close buttons (including X icon)
+                close_button_selectors = [
                 (By.CSS_SELECTOR, '.modal .close'),
                 (By.CSS_SELECTOR, '.modal .btn-close'),
                 (By.CSS_SELECTOR, '.modal [data-dismiss="modal"]'),
@@ -208,73 +210,86 @@ class SingleSessionTestRunner(BaseTest):
                 (By.CSS_SELECTOR, '.modal.show .close'),
                 (By.CSS_SELECTOR, '.modal.show .btn-close'),
                 (By.CSS_SELECTOR, '.modal.fade.show button.close'),
-            ]
-            
-            for selector in close_button_selectors:
+                ]
+
+                for selector in close_button_selectors:
+                    try:
+                        close_buttons = self.driver.find_elements(*selector)
+                        for btn in close_buttons:
+                            if btn.is_displayed():
+                                try:
+                                    btn.click()
+                                    time.sleep(0.3)
+                                except:
+                                    pass
+                    except:
+                        pass
+
+                # Try clicking outside modal on the backdrop
                 try:
-                    close_buttons = self.driver.find_elements(*selector)
-                    for btn in close_buttons:
-                        if btn.is_displayed():
+                    backdrops = self.driver.find_elements(By.CSS_SELECTOR, '.modal-backdrop.fade.show')
+                    for backdrop in backdrops:
+                        if backdrop.is_displayed():
                             try:
-                                btn.click()
+                                backdrop.click()
                                 time.sleep(0.3)
                             except:
                                 pass
                 except:
                     pass
+
+                # Use JavaScript to forcibly close/hide modals
+                try:
+                    self.driver.execute_script("""
+                        // Close all modals
+                        var modals = document.querySelectorAll('.modal');
+                        modals.forEach(function(modal) {
+                            modal.classList.remove('show');
+                            modal.style.display = 'none';
+                            modal.setAttribute('aria-hidden', 'true');
+                        });
+
+                        // Remove backdrop
+                        var backdrops = document.querySelectorAll('.modal-backdrop');
+                        backdrops.forEach(function(backdrop) {
+                            backdrop.remove();
+                        });
+
+                        // Remove modal-open class from body
+                        document.body.classList.remove('modal-open');
+                        document.body.style.overflow = '';
+                        document.body.style.paddingRight = '';
+                    """)
+                    time.sleep(0.3)
+                except:
+                    pass
+
+                # Press Escape key to close modals
+                try:
+                    body = self.driver.find_element(By.TAG_NAME, 'body')
+                    body.send_keys(Keys.ESCAPE)
+                    time.sleep(0.3)
+                except:
+                    pass
             
-            # Try clicking outside modal on the backdrop
-            try:
-                backdrops = self.driver.find_elements(By.CSS_SELECTOR, '.modal-backdrop.fade.show')
-                for backdrop in backdrops:
-                    if backdrop.is_displayed():
-                        try:
-                            backdrop.click()
-                            time.sleep(0.3)
-                        except:
-                            pass
-            except:
-                pass
-            
-            # Use JavaScript to forcibly close/hide modals
-            try:
-                self.driver.execute_script("""
-                    // Close all modals
-                    var modals = document.querySelectorAll('.modal');
-                    modals.forEach(function(modal) {
-                        modal.classList.remove('show');
-                        modal.style.display = 'none';
-                        modal.setAttribute('aria-hidden', 'true');
-                    });
-                    
-                    // Remove backdrop
-                    var backdrops = document.querySelectorAll('.modal-backdrop');
-                    backdrops.forEach(function(backdrop) {
-                        backdrop.remove();
-                    });
-                    
-                    // Remove modal-open class from body
-                    document.body.classList.remove('modal-open');
-                    document.body.style.overflow = '';
-                    document.body.style.paddingRight = '';
-                """)
-                time.sleep(0.3)
-            except:
-                pass
-            
-            # Press Escape key to close modals
-            try:
-                body = self.driver.find_element(By.TAG_NAME, 'body')
-                body.send_keys(Keys.ESCAPE)
-                time.sleep(0.3)
-            except:
-                pass
-            
-            # Wait for modals to disappear
-            self.wait_for_overlay_to_disappear(timeout=3)
-            
-        except Exception as e:
-            logger.debug(f"Cleanup error (non-critical): {e}")
+                # Wait for modals to disappear
+                self.wait_for_overlay_to_disappear(timeout=3)
+
+                # Verify modals are actually closed
+                visible_modals = self.driver.find_elements(By.CSS_SELECTOR, '.modal.show, .modal.fade.show')
+                if not visible_modals:
+                    logger.debug(f"Cleanup successful on attempt {attempt + 1}")
+                    break
+                else:
+                    logger.debug(f"Modals still visible after cleanup attempt {attempt + 1}, retrying...")
+                    time.sleep(1)
+
+            except Exception as e:
+                logger.debug(f"Cleanup error on attempt {attempt + 1} (non-critical): {e}")
+                if attempt < max_attempts - 1:
+                    time.sleep(1)
+                else:
+                    logger.debug(f"Cleanup completed with potential remaining modals")
     
     def _run_single_test(self, test_class: type, method_name: str, index: int, total: int) -> Dict[str, Any]:
         """
@@ -308,17 +323,14 @@ class SingleSessionTestRunner(BaseTest):
             # Clean up any open modals from previous tests
             self._cleanup_between_tests()
             
-            # Navigate to Dashboard first to ensure clean state
+            # Navigate to Dashboard first to ensure clean state (using direct URL)
             try:
-                dashboard_link = self.wait_for_clickable(
-                    (By.XPATH, '//*[contains(text(), "1. Dashboard") or contains(@href, "dashboard")]'),
-                    timeout=5
-                )
-                dashboard_link.click()
+                self.driver.get(f"{self.base_url}/dashboard")
                 self.wait_for_page_load()
-                time.sleep(0.5)  # Small delay for any animations
-            except:
-                pass  # If already on dashboard or can't navigate, continue
+                self.wait_for_no_loading(timeout=10)  # Wait for loading indicators to disappear
+            except Exception as nav_error:
+                logger.debug(f"Dashboard navigation error: {nav_error}")
+                pass  # Continue anyway
             
             # Create instance of test class
             test_instance = test_class()

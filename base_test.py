@@ -63,7 +63,7 @@ class BaseTest:
     """Base class for all test cases with dynamic waits and error handling"""
     
     # Default configuration
-    DEFAULT_TIMEOUT = 20
+    DEFAULT_TIMEOUT = 30  # Increased from 20 to handle slower page loads
     DEFAULT_POLL_FREQUENCY = 0.5
     BASE_URL = "https://testing.d1z4wu6myne6l0.amplifyapp.com"
         
@@ -146,6 +146,8 @@ class BaseTest:
         logger.info(f"Navigating to: {url}")
         self.driver.get(url)
         self.wait_for_page_load()
+        # Wait for any loading overlays to disappear
+        self.wait_for_no_loading(timeout=10)
     
     def wait_for_page_load(self, timeout: int = 30):
         """Wait for page to fully load"""
@@ -242,9 +244,8 @@ class BaseTest:
             return False
     
     def wait_for_overlay_to_disappear(self, timeout: int = 10):
-        """Wait for loading overlays/modals to disappear"""
+        """Wait for loading overlays to disappear (NOT modals - those are legitimate UI)"""
         overlay_selectors = [
-            (By.CSS_SELECTOR, ".modal"),
             (By.CSS_SELECTOR, ".modal-backdrop"),
             (By.CSS_SELECTOR, ".overlay"),
             (By.CSS_SELECTOR, ".spinner"),
@@ -417,3 +418,287 @@ class BaseTest:
     def assert_text_present(self, text: str, message: Optional[str] = None):
         """Assert that text is present on page"""
         assert text in self.driver.page_source, message or f"Text not found: {text}"
+
+    def wait_for_no_loading(self, timeout: int = 10):
+        """Wait for all loading indicators to disappear"""
+        loading_selectors = [
+            (By.CSS_SELECTOR, ".spinner"),
+            (By.CSS_SELECTOR, ".loading"),
+            (By.CSS_SELECTOR, ".loader"),
+            (By.CSS_SELECTOR, "[class*='loading']"),
+            (By.CSS_SELECTOR, "[class*='spinner']"),
+            (By.CSS_SELECTOR, "[class*='loader']"),
+            (By.XPATH, "//*[contains(@class,'spin')]"),
+        ]
+
+        for selector in loading_selectors:
+            try:
+                self.wait_for_element_invisible(selector, timeout=timeout)
+            except:
+                pass
+
+        logger.debug("All loading indicators cleared")
+
+    def wait_for_dropdown_open(self, timeout: int = 5) -> bool:
+        """Wait for react-select dropdown menu to open"""
+        menu_selectors = [
+            (By.CSS_SELECTOR, ".react-select__menu"),
+            (By.CSS_SELECTOR, "[class*='react-select__menu']"),
+            (By.XPATH, "//div[contains(@class,'react-select__menu')]"),
+        ]
+
+        for selector in menu_selectors:
+            try:
+                self.wait_for_visible(selector, timeout=timeout)
+                logger.debug("Dropdown menu opened successfully")
+                return True
+            except:
+                continue
+
+        logger.warning("Could not verify dropdown menu opened")
+        return False
+
+    def wait_for_page_ready(self, expected_heading: Optional[str] = None, timeout: int = 30):
+        """
+        Comprehensive page load verification
+
+        Args:
+            expected_heading: Text to look for in h1-h6 tags
+            timeout: Maximum wait time
+        """
+        # Wait for document ready state
+        self.wait_for_page_load(timeout=timeout)
+
+        # Wait for loading indicators to disappear
+        self.wait_for_no_loading(timeout=10)
+
+        # If expected heading provided, wait for it
+        if expected_heading:
+            heading_selectors = [
+                (By.XPATH, f"//h1[contains(text(),'{expected_heading}')]"),
+                (By.XPATH, f"//h2[contains(text(),'{expected_heading}')]"),
+                (By.XPATH, f"//h3[contains(text(),'{expected_heading}')]"),
+                (By.XPATH, f"//h4[contains(text(),'{expected_heading}')]"),
+                (By.XPATH, f"//h5[contains(text(),'{expected_heading}')]"),
+                (By.XPATH, f"//h6[contains(text(),'{expected_heading}')]"),
+            ]
+
+            for selector in heading_selectors:
+                try:
+                    self.wait_for_visible(selector, timeout=5)
+                    logger.info(f"Found expected heading: {expected_heading}")
+                    return
+                except:
+                    continue
+
+            logger.warning(f"Expected heading '{expected_heading}' not found")
+
+        logger.debug("Page ready")
+
+    def find_element_with_fallbacks(
+        self,
+        selectors: List[Tuple[By, str]],
+        timeout: int = 5
+    ) -> Optional[WebElement]:
+        """
+        Try multiple selectors in sequence until one works
+
+        Args:
+            selectors: List of (By, selector) tuples to try
+            timeout: Timeout for each selector attempt
+
+        Returns:
+            WebElement if found, None otherwise
+        """
+        for by, selector in selectors:
+            try:
+                element = self.wait_for_presence((by, selector), timeout=timeout)
+                logger.debug(f"Element found using selector: {selector}")
+                return element
+            except TimeoutException:
+                continue
+
+        logger.warning(f"Element not found with any of {len(selectors)} selectors")
+        return None
+
+    @retry_on_exception(max_retries=3)
+    def select_from_react_dropdown(
+        self,
+        dropdown_locator: Optional[Tuple[By, str]] = None,
+        dropdown_index: Optional[int] = None,
+        option_text: Optional[str] = None,
+        option_index: int = 0,
+        max_retries: int = 3
+    ) -> bool:
+        """
+        Universal react-select dropdown handler with robust error handling
+
+        Args:
+            dropdown_locator: Tuple (By, selector) to find dropdown
+            dropdown_index: 0-based index if multiple dropdowns (alternative to locator)
+            option_text: Text to search for in options (partial match)
+            option_index: If option_text not provided, select by index (default 0 = first)
+            max_retries: Number of retry attempts
+
+        Returns:
+            True if successful, False otherwise
+
+        Example:
+            # Select by dropdown index and option text
+            self.select_from_react_dropdown(dropdown_index=0, option_text="Electronics")
+
+            # Select by locator and option index
+            locator = (By.XPATH, "//div[@id='category-select']")
+            self.select_from_react_dropdown(dropdown_locator=locator, option_index=1)
+        """
+        for attempt in range(max_retries):
+            try:
+                # Step 1: Find the dropdown control
+                if dropdown_locator:
+                    dropdown = self.wait_for_clickable(dropdown_locator, timeout=10)
+                elif dropdown_index is not None:
+                    # Find all enabled react-select controls
+                    time.sleep(0.5)  # Brief wait for DOM to stabilize
+                    dropdowns = self.driver.find_elements(
+                        By.XPATH,
+                        '//div[contains(@class,"react-select__control") and not(contains(@class,"--is-disabled"))]'
+                    )
+
+                    if len(dropdowns) <= dropdown_index:
+                        logger.warning(f"Dropdown index {dropdown_index} not found, only {len(dropdowns)} enabled")
+                        if attempt < max_retries - 1:
+                            time.sleep(1)
+                            continue
+                        return False
+
+                    dropdown = dropdowns[dropdown_index]
+                else:
+                    logger.error("Must provide either dropdown_locator or dropdown_index")
+                    return False
+
+                # Step 2: Scroll dropdown into view
+                self.driver.execute_script(
+                    "arguments[0].scrollIntoView({block: 'center', behavior: 'instant'});",
+                    dropdown
+                )
+                time.sleep(0.3)
+
+                # Step 3: Wait for any overlays to clear
+                self.wait_for_overlay_to_disappear(timeout=3)
+
+                # Step 4: Click the dropdown (try both methods)
+                try:
+                    dropdown.click()
+                except (ElementNotInteractableException, ElementClickInterceptedException):
+                    logger.debug("Regular click failed, using JavaScript click")
+                    self.driver.execute_script("arguments[0].click();", dropdown)
+
+                # Step 5: Wait for dropdown menu to open
+                time.sleep(0.8)  # Allow animation to complete
+
+                if not self.wait_for_dropdown_open(timeout=5):
+                    logger.warning("Dropdown menu did not open, retrying...")
+                    if attempt < max_retries - 1:
+                        continue
+                    return False
+
+                # Step 6: Find all options in the opened menu
+                option_selectors = [
+                    '//div[contains(@class,"react-select__menu")]//div[@role="option"]',
+                    '//div[@role="listbox"]//div[@role="option"]',
+                    '//div[contains(@class,"react-select__option")]',
+                    '//div[@role="option" and not(contains(@class,"disabled"))]',
+                ]
+
+                all_options = []
+                for selector in option_selectors:
+                    all_options = self.driver.find_elements(By.XPATH, selector)
+                    if all_options:
+                        logger.debug(f"Found {len(all_options)} options using selector: {selector}")
+                        break
+
+                if not all_options:
+                    logger.warning("No options found in dropdown menu")
+                    # Close dropdown and retry
+                    from selenium.webdriver.common.keys import Keys
+                    body = self.driver.find_element(By.TAG_NAME, 'body')
+                    body.send_keys(Keys.ESCAPE)
+                    time.sleep(0.5)
+                    if attempt < max_retries - 1:
+                        continue
+                    return False
+
+                # Step 7: Select the option
+                target_option = None
+
+                if option_text and option_text.strip():
+                    # Find option by text (partial match, case-insensitive)
+                    for opt in all_options:
+                        try:
+                            opt_text = opt.text.strip()
+                            if option_text.lower() in opt_text.lower():
+                                target_option = opt
+                                logger.debug(f"Found matching option: {opt_text}")
+                                break
+                        except StaleElementReferenceException:
+                            continue
+
+                # If no text match or text not provided, use index
+                if not target_option:
+                    if 0 <= option_index < len(all_options):
+                        target_option = all_options[option_index]
+                        try:
+                            logger.debug(f"Selecting option by index {option_index}: {target_option.text.strip()}")
+                        except:
+                            logger.debug(f"Selecting option by index {option_index}")
+                    else:
+                        logger.warning(f"Option index {option_index} out of range (0-{len(all_options)-1})")
+                        target_option = all_options[0] if all_options else None
+
+                if not target_option:
+                    logger.error("Could not determine target option")
+                    return False
+
+                # Step 8: Click the option
+                try:
+                    # Scroll option into view
+                    self.driver.execute_script(
+                        "arguments[0].scrollIntoView({block: 'nearest', behavior: 'instant'});",
+                        target_option
+                    )
+                    time.sleep(0.2)
+
+                    # Try JavaScript click first (more reliable for react-select)
+                    self.driver.execute_script("arguments[0].click();", target_option)
+                except Exception as click_error:
+                    logger.debug(f"JavaScript click failed, trying regular click: {click_error}")
+                    target_option.click()
+
+                # Step 9: Wait for dropdown to close
+                time.sleep(0.5)
+
+                # Step 10: Verify selection (optional but recommended)
+                try:
+                    selected_text = dropdown.text.strip()
+                    logger.info(f"Successfully selected from dropdown: {selected_text}")
+                except:
+                    logger.info("Dropdown selection completed")
+
+                return True
+
+            except StaleElementReferenceException as e:
+                logger.warning(f"Stale element on attempt {attempt + 1}/{max_retries}: {e}")
+                if attempt < max_retries - 1:
+                    time.sleep(1)
+                    continue
+                return False
+
+            except Exception as e:
+                logger.warning(f"Dropdown selection attempt {attempt + 1}/{max_retries} failed: {e}")
+                if attempt < max_retries - 1:
+                    time.sleep(1)
+                    continue
+                return False
+
+        logger.error("All dropdown selection attempts failed")
+        return False

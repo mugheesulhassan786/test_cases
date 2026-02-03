@@ -19,34 +19,35 @@ class TestLeads(BaseTest):
 
     def navigate_to_url(self, url_path):
         """Navigate directly to a URL"""
-        base = getattr(self, 'BASE_URL', "https://testing.d1z4wu6myne6l0.amplifyapp.com")
+        base = getattr(self, 'base_url', None) or getattr(self, 'BASE_URL', "https://testing.d1z4wu6myne6l0.amplifyapp.com")
         full_url = f"{base}{url_path}"
         logger.info(f"Navigating to: {full_url}")
         self.driver.get(full_url)
-        time.sleep(3)
+        self.wait_for_page_load()
+        self.wait_for_no_loading(timeout=10)
+
+    def verify_page_loaded(self, breadcrumb_text, timeout=10):
+        """Verify page loaded by checking breadcrumb or page content"""
+        try:
+            WebDriverWait(self.driver, timeout).until(
+                EC.presence_of_element_located(
+                    (By.XPATH, f"//div[contains(@class,'page-title')]//li[contains(text(),'{breadcrumb_text}')] | //ol[contains(@class,'breadcrumb')]//li[contains(text(),'{breadcrumb_text}')]")
+                )
+            )
+            return True
+        except TimeoutException:
+            return breadcrumb_text.lower() in self.driver.page_source.lower()
 
     def test_01_view_leads_page_loads(self):
         """Verify View Leads page loads correctly"""
         logger.info("=== Testing View Leads Page Load ===")
         self.navigate_to_url("/leads-management/view-leads")
-        
-        try:
-            heading = self.wait_for_element(
-                (By.XPATH, "//h4[contains(text(),'Lead')] | //h5[contains(text(),'Lead')]"),
-                timeout=10
-            )
-            assert heading.is_displayed()
-            logger.info("[OK] View Leads page loaded with heading")
-            
-            # Check for leads table
-            table = self.driver.find_elements(By.XPATH, "//table | //div[contains(@class,'data-grid')]")
-            if table:
-                logger.info("[OK] Leads table found")
-                
-        except TimeoutException:
-            logger.warning("Leads page heading not found")
-        
-        time.sleep(2)
+
+        if self.verify_page_loaded("Lead"):
+            logger.info("[OK] View Leads page loaded")
+        else:
+            assert "lead" in self.driver.page_source.lower(), "Leads page did not load"
+            logger.info("[OK] View Leads page loaded (via content)")
 
 
 if __name__ == "__main__":
