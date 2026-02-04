@@ -32,4 +32,6 @@ jobs:
       - name: Run Selenium test file
         run: |
           source venv/bin/activate
-          python run_single_session.py
+          python run_single_session.py --headless
+         
+
