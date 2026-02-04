@@ -1,0 +1,35 @@
+name: Run Selenium Headless Tests
+
+on:
+  repository_dispatch:
+    types: [run-selenium-tests]
+
+jobs:
+  selenium:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Headless branch
+        uses: actions/checkout@v4
+        with:
+          ref: Headless
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Selenium test file
+        run: |
+          source venv/bin/activate
+          python run_single_session.py
