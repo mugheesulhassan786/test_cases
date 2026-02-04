@@ -1,6 +1,7 @@
 name: Run Selenium Tests (Headless)
 
 on:
+  workflow_dispatch:
   repository_dispatch:
     types:
       - run-selenium-tests
